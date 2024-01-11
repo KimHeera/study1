@@ -14,9 +14,7 @@ import java.text.DecimalFormat;
 
 public class Calculator extends JFrame {
 	String value = "";
-
 	String output = "";
-	boolean reset = false;
 	String n;
 	String result, t = "";
 	String change;
@@ -77,38 +75,28 @@ public class Calculator extends JFrame {
 		new Calculator();
 	}
 
-	ActionListener listener = new ActionListener() {
+	ActionListener listener = new ActionListener() { // listener
 		public void actionPerformed(ActionEvent e) {
-			String input = e.getActionCommand();
+			String event = e.getActionCommand(); // event가 발생한 객체의 text를 return함.
 
-			btns[0].setEnabled(true);
-			btns[1].setEnabled(true);
-			btns[2].setEnabled(true);
-			btns[3].setEnabled(true);
-			btns[7].setEnabled(true);
-			btns[11].setEnabled(true);
-			btns[15].setEnabled(true);
-			btns[18].setEnabled(true);
-			btns[19].setEnabled(true);
+			for (int i = 0; i < btns.length; i++) { // event 발생 시, 숫자 이외의 버튼들도 클릭 허용
+				btns[i].setEnabled(true);
+			}
 
-			if (opt(input)) { // 숫자들은 그냥 출력만 함.
+			boolean reset = false;
+			if (opt(event)) { // opt func을 통해 사용자가 click한 버튼이 숫자인지 확인. 숫자면 출력함.
 				if (reset) {
 					value = "";
-					// output = "";
 					change = "";
 					inputField.setText("");
 
 					reset = false;
 				}
 
-				value += input;
+				value += event;
 				inputField.setText(value);
-				// output += input;
-				change += input;
-			}
-
-			else { // oprator들 다루는 else구문
-
+				change += event;
+			} else { // 숫자가 아니면? oprator들 다루는 else 구문으로 처리함
 				if (reset) {
 					output = result;
 					change = result;
@@ -117,66 +105,34 @@ public class Calculator extends JFrame {
 
 				reset = false;
 
-				if (input.equals("AC")) {
+				if (event.equals("AC")) { // all clear 버튼 클릭 시
 					inputField.setText("0");
 					value = "";
-
 					change = "";
 
-					btns[0].setEnabled(false);
-					btns[1].setEnabled(false);
-					btns[2].setEnabled(false);
-					btns[3].setEnabled(false);
-					btns[7].setEnabled(false);
-					btns[11].setEnabled(false);
-					btns[15].setEnabled(false);
-					btns[18].setEnabled(false);
-					btns[19].setEnabled(false);
-
-					btns[4].setEnabled(true);
-					btns[5].setEnabled(true);
-					btns[6].setEnabled(true);
-					btns[8].setEnabled(true);
-					btns[9].setEnabled(true);
-					btns[10].setEnabled(true);
-					btns[12].setEnabled(true);
-					btns[13].setEnabled(true);
-					btns[14].setEnabled(true);
-					btns[16].setEnabled(true);
-					btns[17].setEnabled(true);
-
-				}
-
-				// --------------------------------------------
-
-				else if (input.equals("<-")) {
-
+					for (int i = 0; i < btns.length; i++) {
+						if (value.equals("") && i != 4 && i != 5 && i != 6 && i != 8 && i != 9 && i != 10 && i != 12
+								&& i != 13
+								&& i != 14 && i != 16 && i != 17)
+							btns[i].setEnabled(false);
+						else
+							btns[i].setEnabled(true);
+					}
+				} else if (event.equals("<-")) { // 삭제 버튼 클릭 시
 					value = value.substring(0, value.length() - 1);
 					inputField.setText(value);
 					change = change.substring(0, change.length() - 2);
-				}
-
-				// --------------------------------------------
-
-				else if (input.equals("!")) {
-					value += input;
+				} else if (event.equals("!")) {
+					value += event;
 					inputField.setText(value);
 
 					//
-				}
+				} else if (!event.equals("0") && !event.equals("=")) {
 
-				// ---------------------------------------------
-
-				else if (!input.equals("0") && !input.equals("=")) {
-
-					value += input;
+					value += event;
 					inputField.setText(value);
 
-				}
-
-				// --------------------------------------------
-
-				else if (input.equals("=")) {
+				} else if (event.equals("=")) {
 
 					String u = "";
 					reset = true;
